@@ -1,0 +1,84 @@
+QUICK SETUP GUIDE
+==================
+
+STEP 1: Install Python Dependencies
+------------------------------------
+pip install -r requirements.txt
+
+
+STEP 2: YouTube Setup
+---------------------
+1. Go to https://console.cloud.google.com/
+2. Create a new project (or select existing)
+3. Enable "YouTube Data API v3":
+   - APIs & Services > Library
+   - Search "YouTube Data API v3"
+   - Click Enable
+4. Create OAuth credentials:
+   - APIs & Services > Credentials
+   - Create Credentials > OAuth client ID
+   - Application type: Desktop app
+   - Download JSON file
+   - Rename to: youtube_credentials.json
+   - Place in project folder
+
+5. IMPORTANT - Add Yourself as Test User:
+   - Go to APIs & Services > OAuth consent screen
+   - Scroll to "Test users" section
+   - Click "+ ADD USERS"
+   - Add your Google account email
+   - Click "ADD"
+   (This fixes "Access blocked" errors!)
+
+
+STEP 3: Instagram Setup
+-----------------------
+Edit upload_config.py and add your credentials:
+  INSTAGRAM_USERNAME = "your_username"
+  INSTAGRAM_PASSWORD = "your_password"
+
+⚠️ WARNING: Instagram automation may violate ToS. Use at your own risk.
+
+
+STEP 4: Google Drive (Optional)
+--------------------------------
+If you want to download from Google Drive:
+1. Enable "Google Drive API" in Google Cloud Console
+2. Create OAuth credentials (same as YouTube)
+3. Download as: drive_credentials.json
+
+
+STEP 5: Run Your First Upload
+------------------------------
+EASIEST WAY:
+  1. Place your videos in the "assets" folder
+  2. Run: python quick_upload.py
+     (No path needed - it will use the assets folder automatically!)
+
+Option A - Quick Upload with custom path:
+  python quick_upload.py "path/to/your/videos"
+
+Option B - Command Line:
+  python video_uploader.py --directory "path/to/your/videos"
+  (Or just: python video_uploader.py to use assets folder)
+
+Option C - Single Video:
+  python video_uploader.py --video "path/to/video.mp4"
+
+
+GOOGLE DRIVE USAGE
+------------------
+List videos in Drive:
+  python drive_helper.py list [folder_id]
+
+Download videos from Drive:
+  python drive_helper.py download [folder_id] [output_folder]
+
+
+TROUBLESHOOTING
+---------------
+- YouTube auth issues: Delete youtube_token.json and re-run
+- Instagram login issues: Delete instagram_session.json and re-run
+- Rate limiting: Increase "upload_delay" in upload_config.json
+- Check upload_log.txt for detailed error messages
+

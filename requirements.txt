@@ -1,0 +1,14 @@
+# YouTube API
+google-api-python-client>=2.100.0
+google-auth-httplib2>=0.1.1
+google-auth-oauthlib>=1.1.0
+
+# Instagram (unofficial API - use at your own risk)
+instagrapi>=2.0.0
+
+# Google Drive (optional)
+# google-api-python-client already includes Drive API
+
+# Additional utilities
+python-dotenv>=1.0.0
+

@@ -1,0 +1,37 @@
+# Credentials and tokens (NEVER commit these!)
+*_credentials.json
+*_token.json
+*_session.json
+upload_config.py
+
+# Logs
+*.log
+upload_log.txt
+
+# History
+upload_history.json
+
+# Assets folder (contains videos to upload)
+assets/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+

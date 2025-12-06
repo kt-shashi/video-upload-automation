@@ -3,11 +3,11 @@
     "privacy_status": "public",
     "category_id": "22",
     "default_description": "Playing Valorant or something IDK\n\nSubscribe for more content!",
-    "default_tags": ["content", "video", "valorant"]
+    "default_tags": ["content", "valorant"]
   },
   "instagram": {
     "default_caption": "Uploaded via automation",
-    "default_hashtags": ["#video", "#content","#instagram", "#valorant"]
+    "default_hashtags": ["#content","#instagram", "#valorant"]
   },
   "upload_delay": 5,
   "retry_attempts": 3

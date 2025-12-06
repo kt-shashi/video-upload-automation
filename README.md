@@ -1,274 +1,268 @@
-# Automated Video Uploader for YouTube and Instagram
+# 🎬 Automated Video Uploader for YouTube & Instagram
 
-This tool automates the process of uploading videos to both YouTube and Instagram simultaneously. It supports local files and can be extended to work with Google Drive.
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![YouTube API](https://img.shields.io/badge/YouTube-API%20v3-red.svg)](https://developers.google.com/youtube/v3)
+[![Instagram](https://img.shields.io/badge/Instagram-Unofficial-orange.svg)](https://www.instagram.com/)
 
-## ⚠️ Important Notes
+> Automate your video uploads to both YouTube and Instagram simultaneously with a single command. Perfect for content creators managing multiple platforms.
 
-### Instagram Disclaimer
-- Instagram's official API does not support posting videos to personal accounts
-- This tool uses `instagrapi`, an unofficial library that may violate Instagram's Terms of Service
-- Use at your own risk - Instagram may temporarily or permanently ban accounts using automation
-- Consider using Instagram's official Business API if you have a business account
+## ✨ Features
 
-### YouTube
-- Uses official YouTube Data API v3
-- Fully compliant with YouTube's Terms of Service
-- Requires Google Cloud Console setup
+- 🚀 **Dual Platform Upload** - Upload to YouTube and Instagram simultaneously
+- 📦 **Batch Processing** - Process entire directories of videos automatically
+- 🏷️ **Smart Metadata** - CSV/JSON support for custom titles, descriptions, and hashtags
+- 🔍 **Auto Hashtag Extraction** - Automatically extracts hashtags from filenames
+- 📊 **Progress Tracking** - Real-time upload progress and detailed logging
+- ⚙️ **Highly Configurable** - Customize privacy, descriptions, tags, and more
+- 🔄 **Error Handling** - Robust error handling with automatic retry logic
+- 📝 **Upload History** - Complete history of all uploads in JSON format
+- ⏱️ **Rate Limiting** - Built-in delays to respect platform rate limits
+- ☁️ **Google Drive Support** - Optional integration for downloading videos from Drive
 
-## Prerequisites
+<details>
+<summary><h2>🎯 Quick Start</h2></summary>
 
-1. **Python 3.8+** installed
-2. **Google Cloud Project** with YouTube Data API v3 enabled
-3. **Instagram account** (personal or business)
+### Prerequisites
 
-## Setup Instructions
+- Python 3.8 or higher
+- Google Cloud Project with YouTube Data API v3 enabled
+- Instagram account (personal or business)
 
-### 1. Install Dependencies
+### Installation
 
-```bash
-pip install -r requirements.txt
-```
-
-### 2. YouTube Setup
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable **YouTube Data API v3**:
-   - Navigate to "APIs & Services" > "Library"
-   - Search for "YouTube Data API v3"
-   - Click "Enable"
-4. Create OAuth 2.0 credentials:
-   - Go to "APIs & Services" > "Credentials"
-   - Click "Create Credentials" > "OAuth client ID"
-   - Choose "Desktop app" as application type
-   - Download the JSON file
-   - Rename it to `youtube_credentials.json` and place it in the project directory
-
-### 3. Instagram Setup
-
-1. Edit `upload_config.py` and add your Instagram credentials:
-   ```python
-   INSTAGRAM_USERNAME = "your_username"
-   INSTAGRAM_PASSWORD = "your_password"
-   ```
-
-**⚠️ Security Warning**: Consider using environment variables instead of hardcoding passwords:
-```python
-import os
-INSTAGRAM_USERNAME = os.getenv('INSTAGRAM_USERNAME')
-INSTAGRAM_PASSWORD = os.getenv('INSTAGRAM_PASSWORD')
-```
-
-### 4. Configuration (Optional)
-
-Edit `upload_config.json` to customize:
-- YouTube privacy settings (private/unlisted/public)
-- Default descriptions and tags
-- Instagram default captions and hashtags
-- Upload delay between videos
-- Retry attempts
-
-### 5. Video Metadata (Optional but Recommended)
-
-For better control over titles, descriptions, hashtags, etc., create a metadata file:
-
-**Option A: CSV File (Recommended for Excel users)**
-```bash
-python create_metadata_template.py csv
-```
-This creates `video_metadata.csv` - edit it with Excel or any spreadsheet app.
-
-**Option B: JSON File**
-```bash
-python create_metadata_template.py json
-```
-This creates `video_metadata.json` - edit it with any text editor.
-
-**See `METADATA_GUIDE.md` for detailed instructions on metadata files.**
-
-**If no metadata file exists:**
-- Title: Extracted from filename (cleaned up)
-- Description: Uses default from config
-- Tags: Extracted from filename hashtags (if any) + default tags
-- Instagram caption: Default caption + hashtags from filename
-
-## Usage
-
-### Quick Start (Using Assets Folder)
-
-1. Place your videos in the `assets` folder in the project directory
-2. Run the upload script:
+1. **Clone the repository**
    ```bash
-   python quick_upload.py
+   git clone https://github.com/yourusername/automation.git
+   cd automation
    ```
-   Or:
+
+2. **Install dependencies**
    ```bash
-   python video_uploader.py
+   pip install -r requirements.txt
    ```
-   The script will automatically detect and use the `assets` folder!
 
-### Upload a Single Video
+3. **Setup YouTube**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a project and enable **YouTube Data API v3**
+   - Create OAuth 2.0 credentials (Desktop app)
+   - Download and save as `youtube_credentials.json`
+   - **Important**: Add yourself as a test user in OAuth consent screen
+
+4. **Setup Instagram**
+   - Edit `upload_config.py` and add your credentials:
+     ```python
+     INSTAGRAM_USERNAME = "your_username"
+     INSTAGRAM_PASSWORD = "your_password"
+     ```
+
+5. **Configure settings** (Optional)
+   - Edit `upload_config.json` to customize default descriptions, tags, privacy settings, etc.
+
+### Usage
 
 ```bash
-python video_uploader.py --video "path/to/video.mp4"
-```
+# Place videos in assets folder and run
+python quick_upload.py
 
-### Upload All Videos in a Directory
-
-```bash
+# Or upload specific directory
 python video_uploader.py --directory "path/to/videos"
-```
-
-### Upload from Assets Folder Explicitly
-
-```bash
-python video_uploader.py --directory assets
-```
-
-### Upload Only to YouTube
-
-```bash
-python video_uploader.py --directory "path/to/videos" --youtube-only
-```
-
-### Upload Only to Instagram
-
-```bash
-python video_uploader.py --directory "path/to/videos" --instagram-only
-```
-
-### Using as a Python Module
-
-```python
-from video_uploader import YouTubeUploader, InstagramUploader, VideoUploadManager
-
-# Initialize uploaders
-youtube = YouTubeUploader()
-instagram = InstagramUploader("username", "password")
-
-# Create manager
-manager = VideoUploadManager(youtube, instagram)
 
 # Upload single video
-manager.process_video(
-    "video.mp4",
-    title="My Video Title",
-    description="Video description",
-    caption="Instagram caption"
-)
-
-# Or process entire directory
-manager.process_directory("path/to/videos")
+python video_uploader.py --video "video.mp4"
 ```
 
-## Features
+</details>
 
-- ✅ **Dual Platform Upload**: Upload to YouTube and Instagram simultaneously
-- ✅ **Batch Processing**: Process entire directories of videos
-- ✅ **Smart Metadata**: CSV/JSON metadata files for titles, descriptions, hashtags
-- ✅ **Hashtag Support**: Automatic hashtag extraction from filenames and metadata
-- ✅ **Progress Tracking**: Real-time upload progress and logging
-- ✅ **Error Handling**: Robust error handling with retry logic
-- ✅ **Upload History**: Tracks all uploads in `upload_history.json`
-- ✅ **Configurable**: Customize privacy, descriptions, tags, and more
-- ✅ **Rate Limiting**: Built-in delays to avoid platform rate limits
+<details>
+<summary><h2>📖 Detailed Usage</h2></summary>
 
-## File Structure
+### Basic Commands
+
+```bash
+# Upload all videos from assets folder (default)
+python quick_upload.py
+
+# Upload specific directory
+python video_uploader.py --directory "path/to/videos"
+
+# Upload single video
+python video_uploader.py --video "video.mp4"
+
+# YouTube only
+python video_uploader.py --directory assets --youtube-only
+
+# Instagram only
+python video_uploader.py --directory assets --instagram-only
+```
+
+### Using Metadata Files
+
+For better control over titles, descriptions, and hashtags:
+
+```bash
+# Create CSV template
+python create_metadata_template.py csv
+
+# Edit video_metadata.csv with your video information
+# Then upload - metadata will be used automatically
+python quick_upload.py
+```
+
+See [METADATA_GUIDE.md](METADATA_GUIDE.md) for detailed metadata file instructions.
+
+### Configuration
+
+Edit `upload_config.json` to customize default settings:
+
+```json
+{
+  "youtube": {
+    "privacy_status": "public",
+    "category_id": "22",
+    "default_description": "Your description here",
+    "default_tags": ["tag1", "tag2"]
+  },
+  "instagram": {
+    "default_caption": "Your caption",
+    "default_hashtags": ["#hashtag1", "#hashtag2"]
+  },
+  "upload_delay": 5
+}
+```
+
+</details>
+
+<details>
+<summary><h2>📁 Project Structure</h2></summary>
 
 ```
 automation/
-├── video_uploader.py          # Main upload script
-├── quick_upload.py             # Simplified upload interface
-├── metadata_handler.py         # Metadata management system
-├── create_metadata_template.py # Create metadata template files
-├── upload_config.py            # Instagram credentials
-├── upload_config.json          # Upload settings
-├── video_metadata.csv          # Video metadata (CSV format) - optional
-├── video_metadata.json         # Video metadata (JSON format) - optional
-├── requirements.txt            # Python dependencies
-├── README.md                   # This file
-├── assets/                     # Place your videos here (default folder)
-│   └── README.txt             # Instructions for assets folder
-├── youtube_credentials.json    # YouTube OAuth credentials (you provide)
-├── youtube_token.json          # Auto-generated YouTube token
-├── instagram_session.json      # Auto-generated Instagram session
-├── upload_history.json         # Upload history log
-└── upload_log.txt              # Detailed upload logs
+├── video_uploader.py          # Main upload engine
+├── quick_upload.py            # Simple CLI interface
+├── metadata_handler.py        # Metadata management system
+├── create_metadata_template.py # Metadata template generator
+├── drive_helper.py            # Google Drive integration helper
+├── upload_config.py           # Instagram credentials
+├── upload_config.json         # Configuration file
+├── requirements.txt           # Python dependencies
+├── README.md                  # This file
+├── METADATA_GUIDE.md          # Detailed metadata guide
+├── setup_guide.txt            # Step-by-step setup instructions
+└── assets/                    # Place videos here (gitignored)
+    └── README.txt            # Instructions for assets folder
 ```
 
-## Supported Video Formats
+</details>
 
-- MP4 (recommended)
-- MOV
-- AVI
-- MKV
-- WebM
-- FLV
+<details>
+<summary><h2>📊 Supported Formats</h2></summary>
 
-## YouTube Video Limits
+- **Video Formats**: MP4, MOV, AVI, MKV, WebM, FLV
+- **Metadata Formats**: CSV, JSON
+- **Platforms**: YouTube, Instagram
 
+### Platform Limits
+
+**YouTube:**
 - Maximum file size: 256GB
 - Maximum duration: 12 hours
-- Recommended formats: MP4, MOV, AVI
+- Recommended format: MP4
 
-## Instagram Video Limits
-
+**Instagram:**
 - Maximum duration: 60 seconds for feed posts
 - Maximum file size: 100MB
 - Recommended format: MP4
 - Aspect ratio: 1:1 (square) or 4:5 (vertical)
 
-## Troubleshooting
+</details>
 
-### YouTube Authentication Issues
-- Ensure `youtube_credentials.json` is in the project directory
-- Check that YouTube Data API v3 is enabled in Google Cloud Console
-- Delete `youtube_token.json` and re-authenticate if needed
+<details>
+<summary><h2>⚠️ Important Notes</h2></summary>
 
-### Instagram Login Issues
-- Instagram may require 2FA - you may need to disable it temporarily or use an app-specific password
-- If you get "Challenge Required", Instagram is asking for verification - complete it manually first
-- Delete `instagram_session.json` to force re-login
+### Instagram Disclaimer
 
-### Rate Limiting
-- Increase `upload_delay` in `upload_config.json` if you hit rate limits
-- Instagram has strict rate limits - consider uploading fewer videos per day
+- This tool uses `instagrapi`, an **unofficial** library
+- May violate Instagram's Terms of Service
+- Use at your own risk - accounts may be temporarily or permanently restricted
+- Consider using Instagram's official Business API for production use
 
-### Large File Uploads
-- For 50GB+ of content, consider:
-  - Processing in smaller batches
-  - Using a stable internet connection
-  - Running the script during off-peak hours
-  - Monitoring disk space for temporary files
+### YouTube
 
-## Google Drive Integration (Optional)
+- Uses official YouTube Data API v3
+- Fully compliant with YouTube's Terms of Service
+- Requires Google Cloud Console setup
 
-To download videos from Google Drive before uploading:
+</details>
 
-1. Enable Google Drive API in Google Cloud Console
-2. Download Drive credentials as `drive_credentials.json`
-3. The script will automatically detect and use Drive integration
+<details>
+<summary><h2>🛠️ Troubleshooting</h2></summary>
 
-## Security Best Practices
+### Common Issues
 
-1. **Never commit credentials to version control**
-   - Add `*_credentials.json`, `*_token.json`, `*_session.json` to `.gitignore`
-   - Use environment variables for sensitive data
+| Issue | Solution |
+|-------|----------|
+| "Access blocked" error | Add your email as test user in Google Cloud Console |
+| Instagram login fails | Disable 2FA temporarily or use app-specific password |
+| Rate limiting | Increase `upload_delay` in `upload_config.json` |
+| Validation errors | Videos still upload successfully - this is a known instagrapi parsing issue |
+| Videos marked as failed | Check `upload_log.txt` - validation errors don't mean upload failed |
 
-2. **Use separate accounts for testing**
-   - Don't risk your main accounts with automation
+### Getting Help
 
-3. **Monitor your accounts**
-   - Check for any warnings or restrictions from platforms
+1. Check `upload_log.txt` for detailed error messages
+2. Review `upload_history.json` for upload status
+3. See [setup_guide.txt](setup_guide.txt) for OAuth issues
+4. See [METADATA_GUIDE.md](METADATA_GUIDE.md) for metadata questions
 
-## License
+</details>
 
-This tool is provided as-is for educational and personal use. Use at your own risk, especially for Instagram automation.
+<details>
+<summary><h2>🔒 Security Best Practices</h2></summary>
 
-## Support
+- ✅ Credentials are gitignored (never commit them)
+- ✅ Use environment variables for production
+- ✅ Use separate test accounts when possible
+- ✅ Monitor your accounts for restrictions
 
-For issues or questions:
-1. Check the logs in `upload_log.txt`
-2. Review `upload_history.json` for failed uploads
-3. Ensure all credentials are correctly configured
+</details>
 
+<details>
+<summary><h2>📚 Documentation</h2></summary>
+
+- [Setup Guide](setup_guide.txt) - Step-by-step setup instructions
+- [Metadata Guide](METADATA_GUIDE.md) - Complete metadata file guide
+
+</details>
+
+<details>
+<summary><h2>🤝 Contributing</h2></summary>
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+</details>
+
+<details>
+<summary><h2>📄 License</h2></summary>
+
+This project is provided as-is for educational and personal use. Use at your own risk, especially for Instagram automation.
+
+</details>
+
+<details>
+<summary><h2>🙏 Acknowledgments</h2></summary>
+
+- [instagrapi](https://github.com/adw0rd/instagrapi) - Instagram API library
+- [Google YouTube Data API](https://developers.google.com/youtube/v3) - Official YouTube API
+
+</details>
+
+---
+
+**Made with ❤️ for content creators**
